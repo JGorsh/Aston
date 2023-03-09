@@ -7,97 +7,129 @@ package org.gorsh.lsit;
  * Он всегда не меньше размера списка. По мере добавления элементов в список ArrayList его емкость автоматически увеличивается.
  * Реализация ArrayList не синхронизирована.
  */
-public class ArrayList <T> implements List<T>{
+public class ArrayList <T> {
 
-    private static final int CAPACITY = 10;
-    private int presentSize = 0;
-    private Object[] newArray = new Object[CAPACITY];
+    private static final int DEFAULT_CAP = 10;
+    private int size;
+    private T[] elements;
+
+    public ArrayList() {
+        this.elements = (T[]) new Object[DEFAULT_CAP];
+        this.size = 0;
+    }
 
     /**
      * Реализация метода get() - получение элемента по индексу.
      * @param index - индекс нужного элемента.
      */
-    @Override
+
     public T get(int index) {
-        return (T) newArray[index];
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        return elements[index];
     }
 
     /**
      * Реализация метода add() - добаление элемента.
      * @param element - элемент для добавления.
      */
-    @Override
+
     public void add(T element) {
-        if(presentSize == newArray.length-1){
-            increaseSize(newArray.length*2);
-        }
-        newArray[presentSize++] = element;
+        if (size == elements.length) resize();
+        elements[size] = element;
+        size++;
     }
 
     /**
      * Реализация метода remove() - удаление элемента по индексу.
      * @param index - индекс нужного элемента.
      */
-    @Override
+
     public void remove(int index) {
-        for (int i = index; i<presentSize; i++)
-            newArray[i] = newArray[i+1];
-        newArray[presentSize] = null;
-        presentSize--;
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+
+        for (int i = index; i < (size - 1); i++) {
+            elements[i] = elements[i + 1];
+        }
+        size--;
     }
 
     /**
      * Реализация метода clearAll() - очистка списка.
      */
-    @Override
+
     public void clearAll() {
-        for (int i = 0; i<presentSize; i++)
-        newArray[i] = null;
+        for (int i = 0; i < size; i++) {
+            elements[i] = null;
+        }
+        size = 0;
     }
 
-    @Override
-    public void sort(T[] array) {
-
+    public void set(int index, T element) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        elements[index] = element;
     }
 
-    private void increaseSize(int newLength) {
-        Object[] nextArray = new Object[newLength];
-        System.arraycopy(newArray, 0, nextArray, 0, presentSize);
-        newArray = nextArray;
+    public int size() {
+        return this.size;
     }
 
-    public  <T extends Comparable<T>> void quickSort(T[] array, int low, int high) {
-        if (array.length == 0) {
-            return;
+    private void resize() {
+        T[] oldElements = elements;
+
+        elements = (T[]) new Object[oldElements.length + oldElements.length / 2];
+
+        for (int i = 0; i < size; i++) {
+            elements[i] = oldElements[i];
         }
-        if (low >= high) {
-            return;
+    }
+
+    public static <T extends Comparable<T>> void sort(ArrayList<T> array) {
+        ArrayList<T> left = new ArrayList<>();
+        ArrayList<T> right = new ArrayList<>();
+
+        if (array.size() == 1) return;
+
+        int middle = array.size() / 2;
+
+        for (int i = 0; i < middle; i++) {
+            left.add(array.get(i));
         }
 
-        int middle = low + (high - low) / 2;
-        T point = array[middle];
+        for (int i = middle; i < array.size(); i++) {
+            right.add(array.get(i));
+        }
 
-        int i = low, j = high;
-        while(i <= j) {
-            while (array[i].compareTo(point) < 0) {
-                i++;
+        sort(left);
+        sort(right);
+
+        merge(left, right, array);
+    }
+
+    private static <T extends Comparable<T>> void merge(ArrayList<T> left, ArrayList<T> right, ArrayList<T> list) {
+
+        int leftIndex = 0, rightIndex = 0, index = 0;
+
+        while ((leftIndex < left.size()) && (rightIndex < right.size())) {
+            if (left.get(leftIndex).compareTo(right.get(rightIndex)) < 0) {
+                list.set(index, left.get(leftIndex));
+                leftIndex++;
+            } else {
+                list.set(index, right.get(rightIndex));
+                rightIndex++;
             }
-            while (array[i].compareTo(point) > 0) {
-                j--;
-            }
-            if(i <= j) {
-                T temp = array[i];
-                array[i] = array[j];
-                array[j] = temp;
-                i++;
-                j--;
-            }
+            index++;
         }
-        if(low < j) {
-            quickSort(array, low, j);
+
+        while (leftIndex < left.size()) {
+            list.set(index, left.get(leftIndex));
+            index++;
+            leftIndex++;
         }
-        if(high > i) {
-            quickSort(array, i, high);
+
+        while (rightIndex < right.size()) {
+            list.set(index, right.get(rightIndex));
+            index++;
+            rightIndex++;
         }
     }
 }
