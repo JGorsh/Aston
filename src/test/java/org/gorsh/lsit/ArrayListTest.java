@@ -22,33 +22,4 @@ class ArrayListTest {
         assertTrue(str2.equals(example.get(2)));
 
     }
-
-    @Test
-    void remove() {
-        ArrayList <String> example = new ArrayList<>();
-        ArrayList <String> example1 = new ArrayList<>();
-
-        String str = "One";
-        String str1 = "Two";
-        String str2 = "Three";
-
-        example.add(str);
-        example.add(str1);
-        example.add(str2);
-
-        example.add(str);
-        example.add(str1);
-
-        example.remove(2);
-
-    }
-
-    @Test
-    void clearAll() {
-
-    }
-
-    @Test
-    void sort() {
-    }
 }

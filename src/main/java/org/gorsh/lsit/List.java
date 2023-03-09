@@ -9,5 +9,5 @@ void remove(int index);
 
 void clearAll();
 
-void sort();
+void sort(T[] array);
 }
