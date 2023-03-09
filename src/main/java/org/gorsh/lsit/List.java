@@ -1,11 +1,11 @@
 package org.gorsh.lsit;
 
-public interface List <E>{
-E get(int index);
+public interface List <T>{
+T get(int index);
 
-void add(E element);
+void add(T element);
 
-E remove(E element);
+void remove(int index);
 
 void clearAll();
 
