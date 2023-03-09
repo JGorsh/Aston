@@ -1,6 +1,6 @@
 package org.gorsh.lsit;
 
-public class ArrayList <T> implements List<T> {
+public class ArrayList <T> implements List<T>{
 
     private static final int CAPACITY = 10;
     private int presentSize = 0;
