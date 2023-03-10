@@ -18,6 +18,11 @@ public class ArrayList <T> {
         this.size = 0;
     }
 
+    public ArrayList(int capacity) {
+        this.elements = (T[]) new Object[capacity];
+        this.size = 0;
+    }
+
     /**
      * Реализация метода get() - получение элемента по индексу.
      * @param index - индекс нужного элемента.
@@ -37,6 +42,17 @@ public class ArrayList <T> {
         if (size == elements.length) resize();
         elements[size] = element;
         size++;
+    }
+
+    /**
+     * Реализация метода add() - добаление элемента по индексу.
+     * @param element - элемент для добавления.
+     * @param index - индекс для добавления.
+     */
+
+    public void add(int index, T element) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        elements[index] = element;
     }
 
     /**
@@ -64,10 +80,6 @@ public class ArrayList <T> {
         size = 0;
     }
 
-    public void set(int index, T element) {
-        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
-        elements[index] = element;
-    }
 
     public int size() {
         return this.size;
@@ -83,6 +95,10 @@ public class ArrayList <T> {
         }
     }
 
+/**
+ * Реализация быстрой сортировки.
+ * Используется вспомогательный класс merge().
+ */
     public static <T extends Comparable<T>> void sort(ArrayList<T> array) {
         ArrayList<T> left = new ArrayList<>();
         ArrayList<T> right = new ArrayList<>();
@@ -111,23 +127,23 @@ public class ArrayList <T> {
 
         while ((leftIndex < left.size()) && (rightIndex < right.size())) {
             if (left.get(leftIndex).compareTo(right.get(rightIndex)) < 0) {
-                list.set(index, left.get(leftIndex));
+                list.add(index, left.get(leftIndex));
                 leftIndex++;
             } else {
-                list.set(index, right.get(rightIndex));
+                list.add(index, right.get(rightIndex));
                 rightIndex++;
             }
             index++;
         }
 
         while (leftIndex < left.size()) {
-            list.set(index, left.get(leftIndex));
+            list.add(index, left.get(leftIndex));
             index++;
             leftIndex++;
         }
 
         while (rightIndex < right.size()) {
-            list.set(index, right.get(rightIndex));
+            list.add(index, right.get(rightIndex));
             index++;
             rightIndex++;
         }
